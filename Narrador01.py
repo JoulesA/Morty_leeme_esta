@@ -3,14 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import cluster, datasets
 from PIL import Image
+#from gtts import gTTS
+import webbrowser 
 
 # FUNCIONES para la red neuronal 
 def hardlim(n):
-    if n > 0 :
-        out = 1
-    else: 
-        out = 0
-
+    out=[]
+    for i in n:
+        if i >= 0 :
+            out.append(1)
+        else: 
+            out.append(0)
     return out
 
 # FUNCIONES para procesamiento de imagenes
@@ -102,4 +105,49 @@ def Get_Letters_vector(imagen):
     
     return letras_vec
 
-Get_Letters_vector('Letras.bmp')
+class INSTAR:
+    def __init__(self):
+        self.w=[]
+        self.bias=[]
+        self.pat=[]
+    
+    def Load_W(self,vectors, similitude = 0.95):
+        lv_size =[]
+        for i in range(len(vectors)):
+            lv_size.append(vectors[i].shape[0]) 
+        w_max_size = max(lv_size)
+        
+        # W [Letras,NCaract] and bias 
+        self.bias=[]
+        # Parecido es un factor entre 0 y uno para ver que tanto se parecen 
+        self.w = np.zeros((len(vectors),w_max_size))
+        for i in range(len(vectors)):
+            norma = 0
+            for k in range(vectors[i].shape[0]):
+                self.w[i,k] = vectors[i][k,0]
+                norma += (vectors[i][k,0])*(vectors[i][k,0])
+            self.bias.append(norma*similitude)
+    
+    def Test(self,pattern):
+        out = self.w @ pattern - self.bias
+        out = hardlim(out)
+        return out
+
+# Obtain the vector of the letters
+# letters = Get_Letters_vector('Letras.bmp')
+letters = Get_Letters_vector('TEXTO.jpg')
+
+# Create the instar
+model = INSTAR()
+# Load the W whit the vectors of letters
+model.Load_W(letters)
+# Test W
+outs = []
+for i in range(len(letters)):
+    sal = model.Test(model.w[i].T)
+    outs.append(sal)
+    print(sal)
+    
+
+    
+#print (outs)
