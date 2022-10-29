@@ -14,3 +14,24 @@ Primero pasa la imagen de colores a escala de grises y despues binariza, 0 o 255
 ## De la red neuronal instar
 Para cuando se inicializa w se hace con una matriz de ceros del mismo tamaño que la cantidad de letras y el tamaño maximo de vector que entro, aqui puede que se pueda mejorar si en vez de hacer matriz de ceros se hace de 255 para variar la info.
 Seria conveniente añadir una compet al final, pero primero haz el cambio de la matriz de ceros para ver si mejora y no trabajes de mas.
+
+## Convertidor Texto-Voz
+Usar gTTS es relativamente sencillo solo que da algunos errores simples, de entrada ocupas dos librerias 
+```Python
+import webbrowser 
+from gtts import gTTS
+```
+Una es para reproducir audios y la otra es para importar el modulo, ambos se instalan con pip
+```Terminal
+pip install webbrowser
+pip install gtts
+```
+para hacer que hable, bueno habla como estadounidense aunque uses español pero bueno habla, la forma es:
+```Python
+texto = 'Cosa que va a decir'
+lenguaje = 'es' # Puedes usar 'en' pero en mi caso da error
+objeto = gTTS(text = texto, lang = lenguaje, slow = False)
+objeto.save('voz.mp3')
+
+webbrowser.open('voz.mp3')
+```
