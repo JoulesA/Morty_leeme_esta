@@ -124,6 +124,29 @@ def Diccionario(v):
         print('s')
     elif v[46] == 1:
         print('t')
+    elif v[47] == 1:
+        print('u')
+    elif v[48] == 1:
+        print('v')
+    elif v[49] == 1:
+        print('w')
+    elif v[50] == 1:
+        print('x')
+    elif v[51] == 1:
+        print('y')
+    elif v[52] == 1:
+        print('z')
+    elif v[53] == 1:
+        print('á')
+    elif v[54] == 1:
+        print('é')
+    elif v[55] == 1:
+        print('í')
+    elif v[56] == 1:
+        print('ó')
+    elif v[57] == 1:
+        print('ú')
+        
         
     
 # FUNCIONES para procesamiento de imagenes
@@ -213,7 +236,7 @@ def Get_Letters_vector(imagen):
         vec = np.reshape(letras[i],((letras[i].shape[0]*letras[i].shape[1]),1))
         letras_vec.append(vec)
     
-    return letras_vec
+    return letras_vec,letras
 
 class INSTAR:
     def __init__(self):
@@ -221,7 +244,7 @@ class INSTAR:
         self.bias=[]
         self.pat=[]
     
-    def Load_W(self,vectors, similitude = 0.98):
+    def Load_W(self,vectors, similitude = 0.90):
         lv_size =[]
         for i in range(len(vectors)):
             lv_size.append(vectors[i].shape[0]) 
@@ -244,7 +267,7 @@ class INSTAR:
 
         pat = np.zeros((self.w.shape[1],1))
         for i in range(len(pattern)):
-            if i <= self.w.shape[1]:
+            if i <= self.w.shape[1]-1:
                 pat[i,0] = pattern[i]
         pattern = pat
                 
@@ -257,7 +280,7 @@ class INSTAR:
 
 # Obtain the vector of the letters
 # letters = Get_Letters_vector('Letras.bmp')
-letters = Get_Letters_vector('ABC.jpg')
+letters,lshapes = Get_Letters_vector('ABC.jpg')
 
 # Create the instar
 model = INSTAR()
@@ -268,10 +291,10 @@ outs = []
 for i in range(len(letters)):
     sal = model.Test(model.w[i].T)
     outs.append(sal)
-    print(sal)
+    # print(sal)
 outs = np.array(outs)
     
-texto = Get_Letters_vector('TEXTO.jpg')
+texto,tshapes = Get_Letters_vector('LETRAS.jpg')
 outst = []
 for i in range(len(texto)):
     sal = model.Test(texto[i])
