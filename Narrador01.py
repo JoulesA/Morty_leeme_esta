@@ -7,7 +7,7 @@ from PIL import Image
 import webbrowser 
 
 # FUNCIONES para la red neuronal 
-def hardlim(n):
+def Hardlim(n):
     out=[]
     for i in n:
         if i >= 0 :
@@ -16,6 +16,116 @@ def hardlim(n):
             out.append(0)
     return out
 
+def Relu(n):
+    out=[]
+    for i in n:
+        if i >= 0 :
+            out.append(i)
+        else: 
+            out.append(0)
+    return out
+
+def Compet(n):
+    out = np.where(n == max(n),1 ,0)
+    return out 
+
+def Diccionario(v):
+    if v[0] == 1:
+        print('A')
+    elif v[1] == 1:
+        print('B')
+    elif v[2] == 1:
+        print('C')
+    elif v[3] == 1:
+        print('D')
+    elif v[4] == 1:
+        print('E')
+    elif v[5] == 1:
+        print('F')
+    elif v[6] == 1:
+        print('G')
+    elif v[7] == 1:
+        print('H')
+    elif v[8] == 1:
+        print('I')
+    elif v[9] == 1:
+        print('J')
+    elif v[10] == 1:
+        print('K')
+    elif v[11] == 1:
+        print('L')
+    elif v[12] == 1:
+        print('M')
+    elif v[13] == 1:
+        print('N')
+    elif v[14] == 1:
+        print('O')
+    elif v[15] == 1:
+        print('P')
+    elif v[16] == 1:
+        print('Q')
+    elif v[17] == 1:
+        print('R')
+    elif v[18] == 1:
+        print('S')
+    elif v[19] == 1:
+        print('T')
+    elif v[20] == 1:
+        print('U')
+    elif v[21] == 1:
+        print('V')
+    elif v[22] == 1:
+        print('W')
+    elif v[23] == 1:
+        print('X')
+    elif v[24] == 1:
+        print('Y')
+    elif v[25] == 1:
+        print('Z')
+    elif v[26] == 1:
+        print('a')
+    elif v[27] == 1:
+        print('b')
+    elif v[28] == 1:
+        print('c')
+    elif v[29] == 1:
+        print('d')
+    elif v[30] == 1:
+        print('e')
+    elif v[31] == 1:
+        print('f')
+    elif v[32] == 1:
+        print('g')
+    elif v[33] == 1:
+        print('h')
+    elif v[34] == 1:
+        print('i')
+    elif v[35] == 1:
+        print('j')
+    elif v[36] == 1:
+        print('k')
+    elif v[37] == 1:
+        print('l')
+    elif v[38] == 1:
+        print('m')
+    elif v[39] == 1:
+        print('n')
+    elif v[40] == 1:
+        print('ñ')
+    elif v[41] == 1:
+        print('o')  
+    elif v[42] == 1:
+        print('p')
+    elif v[43] == 1:
+        print('q')
+    elif v[44] == 1:
+        print('r')
+    elif v[45] == 1:
+        print('s')
+    elif v[46] == 1:
+        print('t')
+        
+    
 # FUNCIONES para procesamiento de imagenes
 def rgb2g(im):
     n_img = 0.299 * im[:,:,0] + 0.587 * im[:,:,1] + 0.114 * im[:,:,2]
@@ -111,7 +221,7 @@ class INSTAR:
         self.bias=[]
         self.pat=[]
     
-    def Load_W(self,vectors, similitude = 0.95):
+    def Load_W(self,vectors, similitude = 0.98):
         lv_size =[]
         for i in range(len(vectors)):
             lv_size.append(vectors[i].shape[0]) 
@@ -127,15 +237,27 @@ class INSTAR:
                 self.w[i,k] = vectors[i][k,0]
                 norma += (vectors[i][k,0])*(vectors[i][k,0])
             self.bias.append(norma*similitude)
+        self.bias = np.array(self.bias)
+        self.bias = np.reshape(self.bias,(len(self.bias),1))
     
     def Test(self,pattern):
+
+        pat = np.zeros((self.w.shape[1],1))
+        for i in range(len(pattern)):
+            if i <= self.w.shape[1]:
+                pat[i,0] = pattern[i]
+        pattern = pat
+                
         out = self.w @ pattern - self.bias
-        out = hardlim(out)
+        # out = Hardlim(out)
+        # out = Relu(out) # Se obtiene mas o menos lo mismo 
+        out = Compet(out)        # Compet
+        
         return out
 
 # Obtain the vector of the letters
 # letters = Get_Letters_vector('Letras.bmp')
-letters = Get_Letters_vector('TEXTO.jpg')
+letters = Get_Letters_vector('ABC.jpg')
 
 # Create the instar
 model = INSTAR()
@@ -147,7 +269,14 @@ for i in range(len(letters)):
     sal = model.Test(model.w[i].T)
     outs.append(sal)
     print(sal)
+outs = np.array(outs)
     
-
+texto = Get_Letters_vector('TEXTO.jpg')
+outst = []
+for i in range(len(texto)):
+    sal = model.Test(texto[i])
+    outst.append(sal)
+    Diccionario(sal)
+outst = np.array(outst)
     
 #print (outs)
